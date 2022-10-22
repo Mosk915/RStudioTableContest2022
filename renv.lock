@@ -1,0 +1,25 @@
+{
+  "R": {
+    "Version": "4.0.5",
+    "Repositories": [
+      {
+        "Name": "AES-CURATED-CRAN",
+        "URL": "http://rspm01pil.ncci.com/aes-curated-cran/latest"
+      },
+      {
+        "Name": "CRAN",
+        "URL": "http://rspm01pil.ncci.com/cran/latest"
+      }
+    ]
+  },
+  "Packages": {
+    "renv": {
+      "Package": "renv",
+      "Version": "0.15.4",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "c1078316e1d4f70275fc1ea60c0bc431",
+      "Requirements": []
+    }
+  }
+}
