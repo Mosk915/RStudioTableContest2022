@@ -61,7 +61,7 @@ navbarPage(title = "Trianglular Tables",
                     ),
                     br(),
                     fluidRow(column(width = 12,
-                                    tags$p(HTML("Please see the <a onclick=\"document.querySelector('[data-value=\\'Tutorial\\']').click()\">Tutorial</a> tab for a step by step guide on how to create the above tables."))))
+                                    tags$p(HTML("Please see the <a onclick=\"document.querySelector('[data-value=\\'Tutorial\\']').click(); window.scrollTo(0, 0);\">Tutorial</a> tab for a step by step guide on how to create the above tables."))))
            ),
            tabPanel(title = "Tutorial",
                     tags$p(HTML("This tutorial will focus on how the interactive loss development factors triangle and completed claim payments triangle are created. A basic understanding of the <code>DT</code> package is assumed. The data for State A on the previous tab will be used.")),
