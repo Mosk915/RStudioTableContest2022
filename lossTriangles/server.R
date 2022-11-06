@@ -100,8 +100,8 @@ function(input, output, session) {
       col <- input$devTriangleFormatted_cells_selected[2]
       
       # determine the previous and current report numbers of the cell selected
-      rpt_prev <- col
-      rpt_curr <- col + 1
+      rpt_prev <- col * 12
+      rpt_curr <- (col + 1) * 12
       
       # determine the loss amounts that make up the development factor
       losses_prev <- values$losses[row, col + 1]
@@ -109,9 +109,9 @@ function(input, output, session) {
       
       output$factorDetail <- renderText(paste0("Selected Factor: ", round(losses_curr / losses_prev, 3),
                                                "\n",
-                                               "Total Claim Payments @", ordinal(rpt_prev), ": ", format(losses_prev, big.mark = ","),
+                                               "Total Claim Payments at ", rpt_prev, " months: ", format(losses_prev, big.mark = ","),
                                                "\n",
-                                               "Total Claim Payments @", ordinal(rpt_curr), ": ", format(losses_curr, big.mark = ",")))
+                                               "Total Claim Payments at ", rpt_curr, " months: ", format(losses_curr, big.mark = ",")))
       
     } else {
       
