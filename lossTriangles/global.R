@@ -8,12 +8,14 @@ library(tidyr)
 load("www/data.RData")
 source("www/functions.R")
 
+# create state a loss triangle
 state_a_triangle <- state_a_losses %>%
   pivot_wider(names_from = "MONTHS",
               values_from = "LOSS",
               names_prefix = "MONTHS_") %>%
   as.data.frame()
 
+# create state a development triangle
 state_a_triangle_dev <- state_a_triangle %>%
   transmute(YEAR,
             MONTHS_12_24 = round(MONTHS_24 / MONTHS_12, 3),
@@ -27,9 +29,11 @@ state_a_triangle_dev <- state_a_triangle %>%
             MONTHS_108_120 = round(MONTHS_120 / MONTHS_108, 3)) %>%
   filter(!(is.na(MONTHS_12_24) & YEAR == max(YEAR)))
 
+# determine the heat map colors for state a
 state_a_triangle_dev <- add_highlighting(state_a_triangle_dev)
 state_a_triangle_dev$COLOR_USE <- FALSE
 
+# create the state a average factors table
 state_a_triangle_summ <- state_a_triangle %>%
   pivot_longer(cols = c("MONTHS_12", "MONTHS_24", "MONTHS_36", "MONTHS_48", "MONTHS_60", "MONTHS_72", "MONTHS_84", "MONTHS_96", "MONTHS_108", "MONTHS_120"),
                names_prefix = "MONTHS_",
@@ -58,12 +62,14 @@ state_a_triangle_summ <- state_a_triangle %>%
   mutate(AVG_METHOD = c("Two Year", "Three Year", "Five Year", "All Year"))
 
 
+# create state b loss triangle
 state_b_triangle <- state_b_losses %>%
   pivot_wider(names_from = "MONTHS",
               values_from = "LOSS",
               names_prefix = "MONTHS_") %>%
   as.data.frame()
 
+# create state b development triangle
 state_b_triangle_dev <- state_b_triangle %>%
   transmute(YEAR,
             MONTHS_12_24 = round(MONTHS_24 / MONTHS_12, 3),
@@ -77,9 +83,11 @@ state_b_triangle_dev <- state_b_triangle %>%
             MONTHS_108_120 = round(MONTHS_120 / MONTHS_108, 3)) %>%
   filter(!(is.na(MONTHS_12_24) & YEAR == max(YEAR)))
 
+# determine the heat map colors for state b
 state_b_triangle_dev <- add_highlighting(state_b_triangle_dev)
 state_b_triangle_dev$COLOR_USE <- FALSE
 
+# create the state b average factors table
 state_b_triangle_summ <- state_b_triangle %>%
   pivot_longer(cols = c("MONTHS_12", "MONTHS_24", "MONTHS_36", "MONTHS_48", "MONTHS_60", "MONTHS_72", "MONTHS_84", "MONTHS_96", "MONTHS_108", "MONTHS_120"),
                names_prefix = "MONTHS_",

@@ -4,6 +4,7 @@ function(input, output, session) {
   
   # Development Triangles
   
+  # DT Proxies
   triangle_proxy <- dataTableProxy(outputId = "devTriangleFormatted")
   averages_proxy <- dataTableProxy(outputId = "averages")
   triangle_filled_proxy <- dataTableProxy(outputId = "lossTriangleFilled")
@@ -43,9 +44,10 @@ function(input, output, session) {
     
   })
   
-  observeEvent(input$lossType, ignoreInit = TRUE, {
+  observeEvent(input$state, ignoreInit = TRUE, {
+    # when the state is changed, update all the reactive values appropriately
     
-    if(input$lossType == "State A") {
+    if(input$state == "State A") {
       values$data <- state_a_triangle_dev
       values$losses <- state_a_triangle
       values$averages <- state_a_triangle_summ
@@ -55,19 +57,26 @@ function(input, output, session) {
       values$averages <- state_b_triangle_summ
     }
     
+    # make sure the current heat map selection persists
     values$data$COLOR_USE <- input$heatMap
+    
+    # reset any current cell selection
     values$clearSelection <- "all"
     
   })
   
   observeEvent(input$heatMap, ignoreInit = TRUE, {
+    # when the heat map is toggled, update the last column in the values$data data frame appropriately
     
     values$data$COLOR_USE <- input$heatMap
+    
+    # do not reset the current cell selection
     values$clearSelection <- "none"
     
   })
   
   observeEvent(values$data, {
+    # when the data is updated replace the data in the DT tables with the new data
     
     replaceData(proxy = triangle_proxy,
                 data = values$data,
@@ -82,15 +91,21 @@ function(input, output, session) {
   })
   
   observeEvent(input$devTriangleFormatted_cells_selected, {
+    # when a cell is selected, output the two loss amounts that go into the development factor
     
     if(length(input$devTriangleFormatted_cells_selected) > 0) {
       
-      year <- input$devTriangleFormatted_cells_selected[1]
-      rpt_prev <- input$devTriangleFormatted_cells_selected[2]
-      rpt_curr <- input$devTriangleFormatted_cells_selected[2] + 1
+      # get the row and column index of the selected cell
+      row <- input$devTriangleFormatted_cells_selected[1]
+      col <- input$devTriangleFormatted_cells_selected[2]
       
-      losses_prev <- values$losses[year, rpt_prev + 1]
-      losses_curr <- values$losses[year, rpt_curr + 1]
+      # determine the previous and current report numbers of the cell selected
+      rpt_prev <- col
+      rpt_curr <- col + 1
+      
+      # determine the loss amounts that make up the development factor
+      losses_prev <- values$losses[row, col + 1]
+      losses_curr <- values$losses[row, col + 2]
       
       output$factorDetail <- renderText(paste0("Selected Factor: ", round(losses_curr / losses_prev, 3),
                                                "\n",
@@ -107,6 +122,8 @@ function(input, output, session) {
   })
   
   observeEvent(c(input$average_method, values$losses), {
+    # when the average method is changed, recalculate the estimated loss values using the new averages
+    # and replace the data in the DT table with the new data
     
     values$factors <- values$averages[values$averages$AVG_METHOD == input$average_method,]
     values$losses_filled <- fill_triangle(data_triangle = values$losses, factors = values$factors)
